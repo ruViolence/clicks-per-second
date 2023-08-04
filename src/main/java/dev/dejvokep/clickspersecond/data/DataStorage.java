@@ -104,7 +104,6 @@ public abstract class DataStorage {
      * @param info the info to queue
      */
     public void sync(@NotNull PlayerInfo info) {
-        sync.remove(info);
         sync.add(info);
     }
 

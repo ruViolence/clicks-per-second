@@ -133,7 +133,7 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
             // Back to sync
             Bukkit.getScheduler().runTask(this, () -> {
                 // Register listeners
-                Bukkit.getScheduler().runTask(this, () -> Bukkit.getPluginManager().registerEvents(listeners = new EventListeners(this), this));
+                Bukkit.getPluginManager().registerEvents(listeners = new EventListeners(this), this);
 
                 // Add all online players
                 for (Player player : Bukkit.getOnlinePlayers()) {
