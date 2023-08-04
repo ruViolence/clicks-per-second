@@ -20,8 +20,6 @@ import dev.dejvokep.clickspersecond.utils.messaging.Messenger;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerAnimationEvent;
-import org.bukkit.event.player.PlayerAnimationType;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
@@ -68,12 +66,6 @@ public class EventListeners implements Listener {
 
         // If watching
         plugin.getWatchManager().stop(player);
-    }
-
-    @EventHandler
-    public void onAnim(PlayerAnimationEvent event) {
-        if (event.getAnimationType() == PlayerAnimationType.ARM_SWING)
-            plugin.getClickHandler().processClick(event.getPlayer().getUniqueId());
     }
 
 }

@@ -164,6 +164,7 @@ placeholder:
 #                only 0, 20 or higher. Make sure to update the display refresh rates, so they do not bottleneck the
 #                sampling capabilities.
 sampling-rate: 20
+async-process: true
 #
 # Messages:
 messages:

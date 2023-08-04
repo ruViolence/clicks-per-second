@@ -18,6 +18,7 @@ package dev.dejvokep.clickspersecond;
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
+import com.comphenix.protocol.ProtocolLibrary;
 import dev.dejvokep.clickspersecond.command.*;
 import dev.dejvokep.clickspersecond.data.DataStorage;
 import dev.dejvokep.clickspersecond.data.DatabaseStorage;
@@ -30,6 +31,7 @@ import dev.dejvokep.clickspersecond.handler.ClickHandler;
 import dev.dejvokep.clickspersecond.handler.ImmediateHandler;
 import dev.dejvokep.clickspersecond.handler.RatedHandler;
 import dev.dejvokep.clickspersecond.handler.sampler.Sampler;
+import dev.dejvokep.clickspersecond.listener.AnimationListener;
 import dev.dejvokep.clickspersecond.listener.EventListeners;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
@@ -37,6 +39,7 @@ import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
 import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
+import dev.dejvokep.clickspersecond.listener.packet.AnimationPacketListener;
 import dev.dejvokep.clickspersecond.utils.messaging.Messenger;
 import dev.dejvokep.clickspersecond.utils.placeholders.PlaceholderReplacer;
 import dev.dejvokep.clickspersecond.utils.placeholders.StatsExpansion;
@@ -133,6 +136,11 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
             Bukkit.getScheduler().runTask(this, () -> {
                 // Register listeners
                 Bukkit.getPluginManager().registerEvents(new EventListeners(this), this);
+                if (getConfig().getBoolean("async-process") && Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+                    ProtocolLibrary.getProtocolManager().addPacketListener(new AnimationPacketListener(this));
+                } else {
+                    Bukkit.getPluginManager().registerEvents(new AnimationListener(this), this);
+                }
 
                 // Add all online players
                 for (Player player : Bukkit.getOnlinePlayers()) {
