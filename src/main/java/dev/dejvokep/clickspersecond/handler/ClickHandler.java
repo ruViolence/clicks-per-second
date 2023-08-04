@@ -68,6 +68,10 @@ public abstract class ClickHandler<T extends Sampler> implements PlayerContainer
             plugin.getDataStorage().sync(info);
     }
 
+    public void shutdown() {
+        // NOOP
+    }
+
     /**
      * Creates sampler for the given player. Called when adding a player to the handler.
      *

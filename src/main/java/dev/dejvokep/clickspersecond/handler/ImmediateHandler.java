@@ -28,6 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Implementation of {@link ClickHandler} which has instant CPS sampling with queues.
  */
 public class ImmediateHandler extends ClickHandler<ImmediateSampler> {
+    private Thread expireThread;
 
     /**
      * Initializes the handler.
@@ -37,13 +38,26 @@ public class ImmediateHandler extends ClickHandler<ImmediateSampler> {
     public ImmediateHandler(@NotNull ClicksPerSecond plugin) {
         super(plugin, new ConcurrentHashMap<>());
 
-        new BukkitRunnable() {
+        expireThread = new Thread("ClickPerSecond-Clear-Thread") {
             @Override
             public void run() {
-                while (true)
+                while (true) {
                     getSamplers().forEach((player, sampler) -> sampler.clear());
+                    
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
             }
-        }.runTaskAsynchronously(plugin);
+        };
+        expireThread.start();
+    }
+
+    @Override
+    public void shutdown() {
+        expireThread.interrupt();
     }
 
     @Override
