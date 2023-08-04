@@ -21,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -34,17 +33,14 @@ public class EventListeners implements Listener {
 
     // Plugin
     private final ClicksPerSecond plugin;
-    // Entity clicks only
-    private boolean entityClicksOnly;
 
     /**
-     * Initializes (but does not register) this event listener. Automatically calls {@link #reload()}.
+     * Initializes (but does not register) this event listener}.
      *
      * @param plugin the plugin
      */
     public EventListeners(@NotNull ClicksPerSecond plugin) {
         this.plugin = plugin;
-        reload();
     }
 
     @EventHandler
@@ -76,20 +72,8 @@ public class EventListeners implements Listener {
 
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
-        if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK) && !entityClicksOnly)
+        if ((event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK))
             plugin.getClickHandler().processClick(event.getPlayer().getUniqueId());
-    }
-
-    @EventHandler
-    public void onDamage(EntityDamageByEntityEvent event) {
-        plugin.getClickHandler().processClick(event.getDamager().getUniqueId());
-    }
-
-    /**
-     * Reloads internal configuration.
-     */
-    public void reload() {
-        entityClicksOnly = plugin.getConfiguration().getBoolean("entity-clicks-only");
     }
 
 }

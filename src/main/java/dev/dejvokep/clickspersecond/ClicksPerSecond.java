@@ -74,7 +74,6 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
     private ClickHandler<? extends Sampler> clickHandler;
     private PlaceholderReplacer placeholderReplacer;
     private WatchManager watchManager;
-    private EventListeners listeners;
     private Messenger messenger;
 
     @Override
@@ -133,7 +132,7 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
             // Back to sync
             Bukkit.getScheduler().runTask(this, () -> {
                 // Register listeners
-                Bukkit.getPluginManager().registerEvents(listeners = new EventListeners(this), this);
+                Bukkit.getPluginManager().registerEvents(new EventListeners(this), this);
 
                 // Add all online players
                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -208,15 +207,6 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
     @NotNull
     public WatchManager getWatchManager() {
         return watchManager;
-    }
-
-    /**
-     * Returns the event listeners.
-     *
-     * @return the event listeners
-     */
-    public EventListeners getListeners() {
-        return listeners;
     }
 
     /**
