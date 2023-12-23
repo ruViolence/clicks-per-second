@@ -45,10 +45,7 @@ public class RatedHandler extends ClickHandler<RatedSampler> {
         // Schedule
         Bukkit.getScheduler().runTaskTimer(plugin, () -> getSamplers().forEach((uuid, sampler) -> {
             // Reset
-            PlayerInfo updated = sampler.reset();
-            // Update
-            if (updated != null)
-                plugin.getDataStorage().sync(updated);
+            sampler.reset();
         }), rate, rate);
     }
 

@@ -18,14 +18,12 @@ package dev.dejvokep.clickspersecond.utils.placeholders;
 import dev.dejvokep.clickspersecond.ClicksPerSecond;
 import dev.dejvokep.clickspersecond.utils.player.PlayerInfo;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * Expansion for PlaceholderAPI.
@@ -71,63 +69,6 @@ public class StatsExpansion extends PlaceholderExpansion {
             if (params.equals("best_date") || params.equals("best_date_formatted"))
                 return replacer.getDateFormat().format(new Date(info.getTime()));
             return replacer.getUnknownValue();
-        }
-
-        // Requesting leaderboard
-        if (params.startsWith("leaderboard")) {
-            // Data
-            String[] identifiers = params.split("_");
-            List<PlayerInfo> leaderboard = plugin.getDataStorage().getLeaderboard();
-
-            // Insufficient length
-            if (identifiers.length < 3 || identifiers.length > 4)
-                return replacer.getUnknownValue();
-
-            // Parse place
-            int place;
-            try {
-                place = Integer.parseInt(identifiers[1]);
-            } catch (NumberFormatException ignored) {
-                return replacer.getUnknownValue();
-            }
-
-            // Unknown place
-            if (place < 1 || place > leaderboard.size())
-                return replacer.getUnknownValue();
-
-            // Info
-            PlayerInfo info = leaderboard.get(place - 1);
-            OfflinePlayer target = Bukkit.getOfflinePlayer(info.getUniqueId());
-
-            // Return by requested
-            String requested = identifiers[2].toLowerCase();
-
-            // If there are only 3 identifiers
-            if (identifiers.length == 3) {
-                switch (requested) {
-                    case "cps":
-                        return String.valueOf(info.getCPS());
-                    case "uuid":
-                        return info.getUniqueId().toString();
-                    case "name":
-                        return convertToUnknown(target.getName(), 0);
-                    case "id":
-                        return target.getName() == null ? info.getUniqueId().toString() : target.getName();
-                    case "date":
-                        return replacer.getDateFormat().format(new Date(info.getTime()));
-                    default:
-                        return replacer.getUnknownValue();
-                }
-            }
-
-            // If the 3rd one is date
-            if (requested.equalsIgnoreCase("date")) {
-                // Return by selector
-                if (identifiers[3].equalsIgnoreCase("millis"))
-                    return String.valueOf(info.getCPS());
-                else if (identifiers[3].equalsIgnoreCase("formatted"))
-                    return replacer.getDateFormat().format(new Date(info.getTime()));
-            }
         }
 
         // Unknown request

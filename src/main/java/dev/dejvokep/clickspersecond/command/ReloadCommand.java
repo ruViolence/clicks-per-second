@@ -49,7 +49,6 @@ public class ReloadCommand {
                     } catch (IOException ex) {
                         plugin.getLogger().log(Level.SEVERE, "An error occurred whilst reloading plugin configuration!", ex);
                     }
-                    plugin.getDataStorage().reload();
                     plugin.getPlaceholderReplacer().reload();
                     plugin.getDisplays().forEach(Display::reload);
 

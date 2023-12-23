@@ -67,10 +67,6 @@
                             <shadedPattern>dev.dejvokep.clickspersecond.libs.dev.dejvokep.boostedyaml</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>dev.dejvokep.clickspersecond.libs.com.zaxxer.hikari</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>cloud.commandframework</pattern>
                             <shadedPattern>dev.dejvokep.clickspersecond.libs.cloud.commandframework</shadedPattern> <!-- Replace this -->
                         </relocation>
@@ -180,12 +176,6 @@
             <artifactId>ProtocolLib</artifactId>
             <version>5.0.0-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- HikariCP (4.0.3 is for JRE 8) -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
         </dependency>
     </dependencies>
 

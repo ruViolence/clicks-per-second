@@ -29,32 +29,6 @@
 # Config version:
 # - IMPORTANT >> Do NOT change unless you know what you are doing. Changing this might break the plugin.
 config-version: 1
-# Storage type:
-# - FILE: saves to player-data.yml file
-# - DATABASE: saves to a remote database (make sure to configure database below)
-storage: FILE
-# Database:
-# - INFO >> Needed to configure only if storage is DATABASE.
-database:
-  # Host:
-  host: ""
-  # Port:
-  port: 3306
-  # Username:
-  username: ""
-  # Password:
-  password: ""
-  # Database:
-  database: ""
-  # Table:
-  table: ""
-  # Advanced configuration:
-  encoding: "utf8"
-  max-pool-size: 10
-  connection-timeout:
-    request: 30000
-    keep-alive: 0
-    lifetime: 1800000
 #
 # Display:
 # - PLACEHOLDERS >> All placeholders are available in the title, subtitle and messages. PlaceholderAPI placeholders can
@@ -110,42 +84,6 @@ display:
     # Refresh rate in ticks (delay between update):
     refresh: 20
 #
-# Data:
-# - IMPORTANT >> If you need help with any of the settings, contact us.
-data:
-  # Delay between each sync in ticks:
-  # - INFO >> Data are uploaded (= synced) with the chosen data storage in batches to improve performance. This value
-  #           indicates the delay between each such request. Minimum value is 1 (tick).
-  sync-rate: 5
-  # Leaderboard fetching:
-  leaderboard:
-    # Expiration of the cached leaderboard in ticks (delay between re-fetching):
-    expiration: 6000
-    # Limit (amount of places) of the fetched leaderboard:
-    # - INFO >> If you're using FILE storage, this is ignored. The cached leaderboard is used for all placeholders
-    #           and also the command (unless the flag is used). With that being said, set this appropriately to how many
-    #           top places you want to allow players to see, or how many of them you want to display, for example, on a
-    #           hologram.
-    limit: 20
-  # Fetching:
-  fetch:
-    # Expiration of fetched player profiles in ticks (delay between re-fetching):
-    expiration: 1200
-    # Batched fetch triggering:
-    # - INFO >> Data are fetched in batches to improve performance.
-    batch:
-      # Fetch all queued profiles when there's at least (= exactly) this amount of them:
-      # - IMPORTANT >> For relatively low traffic servers, you can set this to 1 (fetch everytime someone joins the
-      #                server and their profile is not cached). Otherwise, this should be approximately equal to the
-      #                amount of players joining the server per the rate configured below (if the rate is 5 ticks=0.25s.
-      #                and during those 0.25s on average 10 players join the server, this should be set to 10).
-      size: 10
-      # Fetch all queued profiles (at maximum) after this delay in ticks since the last request:
-      # - INFO >> The delay can be shorter if the size trigger invokes fetching earlier. This is just a safety check if
-      #           your server does not have big enough network for the trigger above. Set to 0 to disable and only rely
-      #           on the size trigger (potentially dangerous in terms of fetch times).
-      rate: 5
-#
 # Placeholders:
 placeholder:
   # Allow PlaceholderAPI placeholder translations in displayed messages:
@@ -175,45 +113,14 @@ messages:
   invalid-name: "&7[&bCPS&7] &cCould not obtain UUID from player '{name}', has he played on the server already?"
   # Data request:
   data-request:
-    # Pending:
-    pending: "&7[&bCPS&7] &cData request already pending, please try again in a moment..."
     # Sent:
     sent: "&7[&bCPS&7] &7Data request was sent, please wait..."
-    # Error:
-    error: "&7[&bCPS&7] &cSomething went wrong, check the console for more details."
   # /cps confirm:
   confirm:
     # Confirmation required:
     required: "&7[&bCPS&7] &7Confirmation required! Please use &b/cps confirm &7within &b20 seconds &7to confirm the operation."
     # No confirmation pending:
     not-pending: "&7[&bCPS&7] &cThere are not any pending confirmations."
-  # /cps stats [uuid|name] [-refresh]:
-  stats:
-    # If there are no data:
-    # - PLACEHOLDERS >> player group
-    not-found: "&7[&bCPS&7] &cNo data found for player identified by {name} ({uuid})."
-    # If the target player is offline:
-    # - PLACEHOLDERS >> player, info groups
-    offline: "&7[&bCPS&7] &7Statistics of player &b{id}&7: best &b{cps_best} CPS &7at {cps_best_date_formatted}"
-    # If the target player is online:
-    # - PLACEHOLDERS >> all group
-    online: "&7[&bCPS&7] &7Statistics of player &b{name}&7: now &b{cps_now} CPS&7, best &b{cps_best} CPS &7at {cps_best_date_formatted}"
-  # /cps leaderboard [page] [-fetch] [-refresh]:
-  leaderboard:
-    # Invalid page:
-    # - PLACEHOLDERS >> {page}: the requested page, {pages}: amount of pages available
-    invalid-page: "&7[&bCPS&7] &cPage number {page} does not exist. There are {pages} pages only."
-    # Entries to display per page:
-    entries-per-page: 20
-    # Header:
-    # - PLACEHOLDERS >> {page}: the requested page, {pages}: amount of pages available
-    header: "&7-- &bCPS leaderboard &7({page}/{pages}) --"
-    # Entry message:
-    # - PLACEHOLDERS >> player, info groups for each entry data, {place}: place in the leaderboard
-    entry: "&7{place}. &b{id}&7: &b{cps_best} &7CPS"
-    # Footer:
-    # - PLACEHOLDERS >> {page}: the requested page, {pages}: amount of pages available
-    footer: "&7---------- ({page}/{pages}) ----------"
   # /cps watch [name]:
   watch:
     # Error:

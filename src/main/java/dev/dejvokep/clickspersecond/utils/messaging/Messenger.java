@@ -52,17 +52,9 @@ public class Messenger {
     public static final String MESSAGE_CONFIRM_NO_PENDING = MESSAGE_PREFIX + "confirm.not-pending";
 
     /**
-     * "Data request pending" message path.
-     */
-    public static final String MESSAGE_REQUEST_PENDING = MESSAGE_PREFIX + "data-request.pending";
-    /**
      * "Data request sent" message path.
      */
     public static final String MESSAGE_REQUEST_SENT = MESSAGE_PREFIX + "data-request.sent";
-    /**
-     * "Data request error" message path.
-     */
-    public static final String MESSAGE_REQUEST_ERROR = MESSAGE_PREFIX + "data-request.error";
 
     private final ClicksPerSecond plugin;
 

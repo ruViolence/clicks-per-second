@@ -51,8 +51,6 @@ public abstract class ClickHandler<T extends Sampler> implements PlayerContainer
     public void add(@NotNull Player player) {
         // Add
         samplers.put(player.getUniqueId(), createSampler(player));
-        // Fetch
-        plugin.getDataStorage().queueFetch(player.getUniqueId());
     }
 
     @Override
@@ -62,10 +60,7 @@ public abstract class ClickHandler<T extends Sampler> implements PlayerContainer
             return;
 
         // Remove
-        PlayerInfo info = samplers.remove(player.getUniqueId()).close();
-        // Update
-        if (info != null)
-            plugin.getDataStorage().sync(info);
+        samplers.remove(player.getUniqueId()).close();
     }
 
     public void shutdown() {
@@ -128,13 +123,7 @@ public abstract class ClickHandler<T extends Sampler> implements PlayerContainer
         if (sampler == null)
             return;
         // Add click
-        PlayerInfo updated = sampler.addClick();
-        // No update
-        if (updated == null)
-            return;
-
-        // Update
-        plugin.getDataStorage().sync(updated);
+        sampler.addClick();
     }
 
     /**

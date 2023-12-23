@@ -54,7 +54,6 @@ public class EventListeners implements Listener {
         Player player = event.getPlayer();
         // Remove
         plugin.getClickHandler().remove(player);
-        plugin.getDataStorage().skipFetch(player.getUniqueId());
         plugin.getDisplays().forEach(display -> display.remove(player));
 
         // Watcher

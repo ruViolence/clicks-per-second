@@ -17,13 +17,11 @@ package dev.dejvokep.clickspersecond.command;
 
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
-import cloud.commandframework.context.CommandContext;
 import cloud.commandframework.extra.confirmation.CommandConfirmationManager;
 import cloud.commandframework.meta.CommandMeta;
 import dev.dejvokep.clickspersecond.ClicksPerSecond;
 import dev.dejvokep.clickspersecond.handler.sampler.Sampler;
 import dev.dejvokep.clickspersecond.utils.player.UUIDFactory;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -60,7 +58,6 @@ public class DeleteCommand {
                     if (target.equals("*") || target.equals("all")) {
                         plugin.getMessenger().send(context, MESSAGE_REQUEST_SENT);
                         plugin.getClickHandler().getSamplers().values().forEach(Sampler::wipeData);
-                        plugin.getDataStorage().deleteAll().whenComplete((result, exception) -> handleResult(result, context));
                         return;
                     }
 
@@ -75,18 +72,7 @@ public class DeleteCommand {
                     Sampler sampler = plugin.getClickHandler().getSampler(uuid);
                     if (sampler != null)
                         sampler.wipeData();
-                    plugin.getDataStorage().delete(uuid).whenComplete((result, exception) -> handleResult(result, context));
                 }).build());
-    }
-
-    /**
-     * Handles the result by sending the appropriate message to the sender of the given context.
-     *
-     * @param result  the result of the operation
-     * @param context the command context
-     */
-    private void handleResult(boolean result, CommandContext<CommandSender> context) {
-        Bukkit.getScheduler().runTask(plugin, () -> plugin.getMessenger().send(context, result ? MESSAGE_PREFIX + "delete" : MESSAGE_REQUEST_ERROR));
     }
 
 }

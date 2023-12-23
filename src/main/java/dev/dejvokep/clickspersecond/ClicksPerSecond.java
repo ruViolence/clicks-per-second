@@ -20,9 +20,6 @@ import cloud.commandframework.bukkit.BukkitCommandManager;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import com.comphenix.protocol.ProtocolLibrary;
 import dev.dejvokep.clickspersecond.command.*;
-import dev.dejvokep.clickspersecond.data.DataStorage;
-import dev.dejvokep.clickspersecond.data.DatabaseStorage;
-import dev.dejvokep.clickspersecond.data.FileStorage;
 import dev.dejvokep.clickspersecond.display.implementation.ActionBarDisplay;
 import dev.dejvokep.clickspersecond.display.implementation.BossBarDisplay;
 import dev.dejvokep.clickspersecond.display.Display;
@@ -71,7 +68,6 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
 
     // Data
     private YamlDocument config;
-    private DataStorage dataStorage;
 
     // Internals
     private ClickHandler<? extends Sampler> clickHandler;
@@ -117,8 +113,6 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
         // Commands
         try {
             CommandManager<CommandSender> commandManager = new BukkitCommandManager<>(this, CommandExecutionCoordinator.simpleCoordinator(), Function.identity(), Function.identity());
-            new StatsCommand(this, commandManager);
-            new LeaderboardCommand(this, commandManager);
             new DeleteCommand(this, commandManager);
             new WatchCommand(this, commandManager);
             new ReloadCommand(this, commandManager);
@@ -127,34 +121,26 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
             getLogger().log(Level.SEVERE, "An unexpected error occurred whilst registering commands!", ex);
         }
 
-        // Run async
-        Bukkit.getScheduler().runTaskAsynchronously(this, () -> {
-            // Storage
-            dataStorage = config.getString("storage").equalsIgnoreCase("FILE") ? new FileStorage(this) : new DatabaseStorage(this);
+        Bukkit.getScheduler().runTask(this, () -> {
+            // Register listeners
+            Bukkit.getPluginManager().registerEvents(new EventListeners(this), this);
+            if (getConfig().getBoolean("async-process") && Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
+                ProtocolLibrary.getProtocolManager().addPacketListener(new AnimationPacketListener(this));
+            } else {
+                Bukkit.getPluginManager().registerEvents(new AnimationListener(this), this);
+            }
 
-            // Back to sync
-            Bukkit.getScheduler().runTask(this, () -> {
-                // Register listeners
-                Bukkit.getPluginManager().registerEvents(new EventListeners(this), this);
-                if (getConfig().getBoolean("async-process") && Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")) {
-                    ProtocolLibrary.getProtocolManager().addPacketListener(new AnimationPacketListener(this));
-                } else {
-                    Bukkit.getPluginManager().registerEvents(new AnimationListener(this), this);
-                }
-
-                // Add all online players
-                for (Player player : Bukkit.getOnlinePlayers()) {
-                    clickHandler.add(player);
-                    displays.forEach(display -> display.add(player));
-                }
-            });
+            // Add all online players
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                clickHandler.add(player);
+                displays.forEach(display -> display.add(player));
+            }
         });
     }
 
     @Override
     public void onDisable() {
         clickHandler.shutdown();
-        dataStorage.close();
     }
 
     /**
@@ -167,16 +153,6 @@ public class ClicksPerSecond extends JavaPlugin implements Listener {
         return config;
     }
 
-
-    /**
-     * Returns the data storage.
-     *
-     * @return the data storage
-     */
-    @NotNull
-    public DataStorage getDataStorage() {
-        return dataStorage;
-    }
 
     /**
      * Returns the click handler.
